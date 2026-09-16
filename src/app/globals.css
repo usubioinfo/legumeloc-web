@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #2b2d42;
+  --slate: #8d99ae;
+  --mist: #edf2f4;
+  --red: #ef233c;
+  --red-dark: #d90429;
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #f8f9fa;
+    color: var(--navy);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  button, input, textarea, select { font: inherit; }
+  button, a { outline-offset: 3px; }
+}
+
+.btn-primary-legumeloc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--red);
+  color: #fff;
+  border-radius: .375rem;
+  font-weight: 700;
+  padding: .65rem 1.2rem;
+  transition: background-color .18s ease;
+}
+.btn-primary-legumeloc:hover { background: var(--red-dark); }
+.btn-secondary-legumeloc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+  color: #fff;
+  border-radius: .375rem;
+  font-weight: 700;
+  padding: .65rem 1.2rem;
+}
+.form-input-legumeloc {
+  width: 100%;
+  border: 1px solid #b9c1ce;
+  border-radius: .375rem;
+  background: #fff;
+  font-size: .875rem;
+  padding: .65rem .85rem;
+}
+.form-input-legumeloc:focus {
+  outline: 2px solid transparent;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(239,35,60,.14);
+}
+.results-table-scroll { scrollbar-gutter: stable; scrollbar-color: var(--slate) var(--mist); }
+.section-kicker { color: var(--red-dark); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.help-title { margin-top: .6rem; color: var(--navy); font-size: clamp(1.75rem,3vw,2.35rem); font-weight: 650; letter-spacing: -.025em; line-height: 1.12; }
+.help-intro { margin-top: .9rem; max-width: 48rem; color: #5e6674; font-size: .925rem; line-height: 1.65; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

@@ -1,0 +1,12 @@
+services:
+  app:
+    environment:
+      LOCAL_FALLBACK_ENABLED: "true"
+      LOCAL_PYTHON_BIN: /opt/predictor/.venv/bin/python
+      LOCAL_CLI_PATH: /opt/predictor/LegumeLoc.py
+    volumes:
+      - type: bind
+        source: ${LOCAL_PREDICTOR_DIR:?set LOCAL_PREDICTOR_DIR}
+        target: /opt/predictor
+        read_only: true
+    mem_limit: ${LOCAL_FALLBACK_MEMORY_LIMIT:-4g}
