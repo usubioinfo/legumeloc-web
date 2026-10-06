@@ -200,7 +200,7 @@ check_health() {
     bind_address="$(current_value PUBLIC_BIND_ADDRESS)"
     base_path="$(current_value NEXT_PUBLIC_BASE_PATH)"
     bind_address="${bind_address:-127.0.0.1}"
-    base_path="${base_path:-/LegumeLoc}"
+    base_path="${base_path:-/legumeloc}"
     health_host="${bind_address}"
     [[ "${health_host}" == 0.0.0.0 || "${health_host}" == :: ]] && health_host=127.0.0.1
     health_url="http://${health_host}:3220${base_path}"
@@ -330,7 +330,7 @@ prompt_value DOCKER_UID 'Container user ID' "${default_uid}"
 prompt_value DOCKER_GID 'Container group ID' "${default_gid}"
 prompt_value PUBLIC_BIND_ADDRESS 'Gateway bind address' '127.0.0.1'
 prompt_value TRUSTED_PROXY_CIDR 'Trusted reverse-proxy address/CIDR' '127.0.0.1/32'
-prompt_value NEXT_PUBLIC_BASE_PATH 'Public URL base path' '/LegumeLoc'
+prompt_value NEXT_PUBLIC_BASE_PATH 'Public URL base path' '/legumeloc'
 
 PREDICTION_TIMEOUT_MS="$(current_value PREDICTION_TIMEOUT_MS)"; PREDICTION_TIMEOUT_MS="${PREDICTION_TIMEOUT_MS:-0}"
 PREDICTION_JOB_RETENTION_MS="$(current_value PREDICTION_JOB_RETENTION_MS)"; PREDICTION_JOB_RETENTION_MS="${PREDICTION_JOB_RETENTION_MS:-2592000000}"

@@ -42,7 +42,7 @@ The recommended interactive setup from the repository root is:
 ./start.sh
 ```
 
-The launcher creates `deploy/docker.env` with mode `0600`, validates the selected Compose configuration, builds the application, starts the services, and checks the site at `/LegumeLoc`. Later runs can start existing images, pull Git updates and rebuild, or perform a clean rebuild while preserving job data and downloads. The equivalent direct modes are `--start-only`, `--update`, and `--rebuild`. To create and validate the environment file without starting containers, run `./start.sh --configure-only`.
+The launcher creates `deploy/docker.env` with mode `0600`, validates the selected Compose configuration, builds the application, starts the services, and checks the site at `/legumeloc`. Later runs can start existing images, pull Git updates and rebuild, or perform a clean rebuild while preserving job data and downloads. The equivalent direct modes are `--start-only`, `--update`, and `--rebuild`. To create and validate the environment file without starting containers, run `./start.sh --configure-only`.
 
 ### Rootless Podman (recommended on RHEL-family VMs)
 
@@ -67,14 +67,14 @@ docker compose --env-file deploy/docker.env -f deploy/compose.yaml -f deploy/com
 
 The gateway listens only on `127.0.0.1:3220` by default. When the HTTPS reverse proxy is on another host, set `PUBLIC_BIND_ADDRESS` to the VM's private interface and `TRUSTED_PROXY_CIDR` to the reverse proxy's exact source address with a `/32` prefix. Restrict TCP port 3220 at the VM firewall to that same source address. Never expose the internal application container.
 
-For a subpath deployment, set `NEXT_PUBLIC_BASE_PATH=/LegumeLoc` before building and proxy the path without stripping it:
+For a subpath deployment, set `NEXT_PUBLIC_BASE_PATH=/legumeloc` before building and proxy the path without stripping it:
 
 ```apache
 ProxyPreserveHost On
 ProxyAddHeaders On
 RequestHeader set X-Forwarded-Proto "https"
-ProxyPass        "/LegumeLoc" "http://VM_PRIVATE_IP:3220/LegumeLoc"
-ProxyPassReverse "/LegumeLoc" "http://VM_PRIVATE_IP:3220/LegumeLoc"
+ProxyPass        "/legumeloc" "http://VM_PRIVATE_IP:3220/legumeloc"
+ProxyPassReverse "/legumeloc" "http://VM_PRIVATE_IP:3220/legumeloc"
 ```
 
 Check the deployment:
@@ -82,7 +82,7 @@ Check the deployment:
 ```bash
 podman compose --env-file deploy/docker.env -f deploy/compose.yaml -f deploy/compose.podman.yaml ps
 podman compose --env-file deploy/docker.env -f deploy/compose.yaml -f deploy/compose.podman.yaml logs -f app gateway
-curl --fail http://127.0.0.1:3220/LegumeLoc
+curl --fail http://127.0.0.1:3220/legumeloc
 ```
 
 ## Results retention
@@ -117,7 +117,7 @@ docker compose --env-file deploy/docker.env -f deploy/compose.yaml \
 docker compose --env-file deploy/docker.env -f deploy/compose.yaml \
   -f deploy/compose.ssh-key.yaml exec -T app \
   test -r /app/public/download/LegumeLoc.tar.gz
-curl --fail --head http://127.0.0.1:3220/LegumeLoc/download/LegumeLoc.tar.gz
+curl --fail --head http://127.0.0.1:3220/legumeloc/download/LegumeLoc.tar.gz
 ```
 
 For rootless Podman, replace the `docker compose` commands with `podman compose` and use `-f deploy/compose.podman.yaml` instead of `-f deploy/compose.ssh-key.yaml`.

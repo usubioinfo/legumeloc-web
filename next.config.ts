@@ -25,7 +25,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "/LegumeLoc",
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "/legumeloc",
   output: "standalone",
   poweredByHeader: false,
   images: { unoptimized: true },
