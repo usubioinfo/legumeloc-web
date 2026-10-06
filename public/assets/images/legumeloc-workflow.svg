@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+  <title id="title">LegumeLoc hierarchical prediction workflow</title>
+  <desc id="desc">Protein accession IDs or FASTA sequences are encoded as DPCP or TPC features, analyzed using deep-learning models, and classified through three localization levels.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6 0 12Z" fill="#6f777c"/></marker>
+    <marker id="smallArrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5 0 9Z" fill="#8b9499"/></marker>
+    <style>
+      .heading{font:700 28px Helvetica,Arial,sans-serif;fill:#24282c}.panel-title{font:700 17px Helvetica,Arial,sans-serif;fill:#fff;letter-spacing:1.2px}.label{font:700 21px Helvetica,Arial,sans-serif;fill:#24282c}.body{font:400 17px Helvetica,Arial,sans-serif;fill:#4f595f}.small{font:400 15px Helvetica,Arial,sans-serif;fill:#5f686e}.micro{font:700 13px Helvetica,Arial,sans-serif;fill:#606a70;letter-spacing:.7px}.major-line{stroke:#6f777c;stroke-width:4;fill:none;marker-end:url(#arrow)}.minor-line{stroke:#8b9499;stroke-width:2.5;fill:none;marker-end:url(#smallArrow)}
+    </style>
+  </defs>
+
+  <rect width="1600" height="760" fill="#fff"/>
+  <text x="800" y="46" text-anchor="middle" class="heading">LegumeLoc: from protein sequence to localization prediction</text>
+  <line x1="120" y1="70" x2="1480" y2="70" stroke="#d7d2ce" stroke-width="2"/>
+
+  <!-- Step 1: input -->
+  <rect x="38" y="126" width="280" height="458" rx="6" fill="#faf8f6" stroke="#a9632f" stroke-width="3"/>
+  <path d="M38 132a6 6 0 0 1 6-6h268a6 6 0 0 1 6 6v40H38z" fill="#a9632f"/>
+  <text x="178" y="155" text-anchor="middle" class="panel-title">1 · PROTEIN INPUT</text>
+  <path d="M108 222h112l28 28v150H108z" fill="#fff" stroke="#a8afb3" stroke-width="3"/>
+  <path d="M220 222v30h28" fill="none" stroke="#a8afb3" stroke-width="3"/>
+  <text x="128" y="281" class="micro">&gt;PROTEIN_01</text>
+  <line x1="128" y1="302" x2="226" y2="302" stroke="#1c7e9c" stroke-width="5"/>
+  <line x1="128" y1="324" x2="214" y2="324" stroke="#1c7e9c" stroke-width="5"/>
+  <line x1="128" y1="346" x2="231" y2="346" stroke="#1c7e9c" stroke-width="5"/>
+  <line x1="128" y1="368" x2="196" y2="368" stroke="#1c7e9c" stroke-width="5"/>
+  <text x="178" y="448" text-anchor="middle" class="label">Amino-acid sequence</text>
+  <text x="178" y="482" text-anchor="middle" class="body">NCBI / UniProt accession</text>
+  <text x="178" y="511" text-anchor="middle" class="body">Uploaded or pasted FASTA</text>
+  <rect x="86" y="536" width="184" height="28" rx="14" fill="#efe7e0"/>
+  <text x="178" y="555" text-anchor="middle" class="micro">UP TO 10,000 SEQUENCES</text>
+
+  <path d="M318 355H372" class="major-line"/>
+
+  <!-- Step 2: features -->
+  <rect x="382" y="126" width="330" height="458" rx="6" fill="#f5f9fa" stroke="#1c7e9c" stroke-width="3"/>
+  <path d="M382 132a6 6 0 0 1 6-6h318a6 6 0 0 1 6 6v40H382z" fill="#1c7e9c"/>
+  <text x="547" y="155" text-anchor="middle" class="panel-title">2 · FEATURE ENCODING</text>
+  <text x="547" y="218" text-anchor="middle" class="label">Select prediction model</text>
+  <rect x="414" y="250" width="266" height="105" rx="5" fill="#fff" stroke="#9bbbc5" stroke-width="2"/>
+  <circle cx="446" cy="282" r="11" fill="#1c7e9c"/><circle cx="446" cy="282" r="4" fill="#fff"/>
+  <text x="470" y="288" class="label">Fast</text>
+  <text x="446" y="326" class="body">DPCP · dipeptide composition</text>
+  <rect x="414" y="374" width="266" height="105" rx="5" fill="#fff" stroke="#9bbbc5" stroke-width="2"/>
+  <circle cx="446" cy="406" r="11" fill="#fff" stroke="#1c7e9c" stroke-width="3"/>
+  <text x="470" y="412" class="label">Sensitive</text>
+  <text x="446" y="450" class="body">TPC · tripeptide composition</text>
+  <g transform="translate(458 508)">
+    <rect width="18" height="18" fill="#d8e8ec"/><rect x="22" width="18" height="18" fill="#91c0cc"/><rect x="44" width="18" height="18" fill="#1c7e9c"/><rect x="66" width="18" height="18" fill="#bdd7dd"/><rect x="88" width="18" height="18" fill="#6aa8b8"/>
+    <rect y="22" width="18" height="18" fill="#7ab0bd"/><rect x="22" y="22" width="18" height="18" fill="#e0ecef"/><rect x="44" y="22" width="18" height="18" fill="#afd0d7"/><rect x="66" y="22" width="18" height="18" fill="#4d98aa"/><rect x="88" y="22" width="18" height="18" fill="#d8e8ec"/>
+  </g>
+  <text x="589" y="537" class="small">numeric feature vector</text>
+
+  <path d="M712 355H766" class="major-line"/>
+
+  <!-- Step 3: deep learning -->
+  <rect x="776" y="126" width="300" height="458" rx="6" fill="#faf8f6" stroke="#a9632f" stroke-width="3"/>
+  <path d="M776 132a6 6 0 0 1 6-6h288a6 6 0 0 1 6 6v40H776z" fill="#a9632f"/>
+  <text x="926" y="155" text-anchor="middle" class="panel-title">3 · DEEP LEARNING</text>
+  <text x="926" y="218" text-anchor="middle" class="label">Hierarchical models</text>
+  <g stroke="#aab0b3" stroke-width="2">
+    <line x1="840" y1="282" x2="897" y2="252"/><line x1="840" y1="282" x2="897" y2="312"/><line x1="840" y1="352" x2="897" y2="312"/><line x1="840" y1="352" x2="897" y2="382"/><line x1="897" y1="252" x2="963" y2="282"/><line x1="897" y1="312" x2="963" y2="282"/><line x1="897" y1="312" x2="963" y2="352"/><line x1="897" y1="382" x2="963" y2="352"/><line x1="963" y1="282" x2="1020" y2="317"/><line x1="963" y1="352" x2="1020" y2="317"/>
+  </g>
+  <g fill="#1c7e9c" stroke="#fff" stroke-width="3"><circle cx="840" cy="282" r="15"/><circle cx="840" cy="352" r="15"/><circle cx="897" cy="252" r="15"/><circle cx="897" cy="312" r="15"/><circle cx="897" cy="382" r="15"/><circle cx="963" cy="282" r="15"/><circle cx="963" cy="352" r="15"/></g>
+  <circle cx="1020" cy="317" r="18" fill="#a9632f" stroke="#fff" stroke-width="3"/>
+  <text x="926" y="440" text-anchor="middle" class="body">Model inference and</text>
+  <text x="926" y="469" text-anchor="middle" class="body">class-probability estimation</text>
+  <rect x="838" y="505" width="176" height="40" rx="4" fill="#fff" stroke="#c8c5c1"/>
+  <text x="926" y="531" text-anchor="middle" class="micro">PREDICTION SCORES</text>
+
+  <path d="M1076 355H1130" class="major-line"/>
+
+  <!-- Step 4: hierarchical results -->
+  <rect x="1140" y="96" width="422" height="520" rx="6" fill="#f7f8f8" stroke="#68737a" stroke-width="3"/>
+  <path d="M1140 102a6 6 0 0 1 6-6h410a6 6 0 0 1 6 6v40h-422z" fill="#68737a"/>
+  <text x="1351" y="125" text-anchor="middle" class="panel-title">4 · HIERARCHICAL RESULTS</text>
+  <rect x="1231" y="170" width="240" height="64" rx="5" fill="#fff" stroke="#1c7e9c" stroke-width="2.5"/>
+  <text x="1351" y="195" text-anchor="middle" class="micro">LEVEL I</text>
+  <text x="1351" y="219" text-anchor="middle" class="label">Single or dual?</text>
+  <path d="M1351 234v31h-105v22" class="minor-line"/><path d="M1351 234v31h105v22" class="minor-line"/>
+  <rect x="1169" y="291" width="154" height="55" rx="5" fill="#edf6f8" stroke="#1c7e9c" stroke-width="2"/>
+  <text x="1246" y="325" text-anchor="middle" class="label">Single</text>
+  <rect x="1379" y="291" width="154" height="55" rx="5" fill="#f5eee8" stroke="#a9632f" stroke-width="2"/>
+  <text x="1456" y="325" text-anchor="middle" class="label">Dual</text>
+  <path d="M1246 346v43" class="minor-line"/><path d="M1456 346v43" class="minor-line"/>
+  <rect x="1169" y="393" width="154" height="136" rx="5" fill="#fff" stroke="#9bbbc5" stroke-width="2"/>
+  <text x="1246" y="421" text-anchor="middle" class="micro">LEVEL II</text>
+  <text x="1246" y="450" text-anchor="middle" class="label">11 classes</text>
+  <text x="1246" y="480" text-anchor="middle" class="small">Nucleus · Plastid</text>
+  <text x="1246" y="504" text-anchor="middle" class="small">Cytoplasm · ER</text>
+  <rect x="1379" y="393" width="154" height="136" rx="5" fill="#fff" stroke="#c9a98e" stroke-width="2"/>
+  <text x="1456" y="421" text-anchor="middle" class="micro">LEVEL III</text>
+  <text x="1456" y="450" text-anchor="middle" class="label">14 classes</text>
+  <text x="1456" y="480" text-anchor="middle" class="small">Supported pairs of</text>
+  <text x="1456" y="504" text-anchor="middle" class="small">cellular locations</text>
+  <rect x="1220" y="554" width="262" height="36" rx="18" fill="#e7ecee"/>
+  <text x="1351" y="578" text-anchor="middle" class="micro">VIEW · BOOKMARK · DOWNLOAD</text>
+
+  <line x1="180" y1="655" x2="1420" y2="655" stroke="#d7d2ce" stroke-width="2"/>
+  <circle cx="493" cy="699" r="7" fill="#1c7e9c"/><text x="510" y="705" class="body">Fast: DPCP representation for larger analyses</text>
+  <circle cx="938" cy="699" r="7" fill="#a9632f"/><text x="955" y="705" class="body">Sensitive: TPC representation for higher-detail prediction</text>
+</svg>

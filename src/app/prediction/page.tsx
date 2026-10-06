@@ -11,13 +11,6 @@ const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '';
 
 const DEMO_ACCESSIONS = 'A0A444WUS4\nA0A444YK19\nA0A191UJB7';
 
-const DEMO_FASTA = `>A0A444WUS4
-MGQCASRRTNNNNNNNGGISGGGGYVHSERHQGCFAMVKEHKSRFYIARRCIVMLLCWHKYGKY
->A0A444YK19
-MNCSHPTISQSHNNNRQKQQEEEQICNRSACHNNNKSFGKKCRHLMKEQRAKFYILRRCIAMLLCWDEHSY
->A0A191UJB7
-MSHSVKIYDTCIGCTQCVRACPTDVLEMIPWDGCKAKQIASAPRTEDCVGCKRCESACPTDFLSVRVYLWHETTRSMGLAY`;
-
 const getErrorMessage = (error: unknown) =>
   error instanceof Error ? error.message : 'An unexpected error occurred.';
 
@@ -162,6 +155,21 @@ export default function PredictionPage() {
     setTextareaSeq('');
   };
 
+  const loadDemoFasta = async () => {
+    try {
+      const response = await fetch(withBasePath('/assets/js/demo.fa'), { cache: 'no-store' });
+      if (!response.ok) throw new Error('The LegumeLoc example FASTA could not be loaded.');
+      const fasta = (await response.text()).trim();
+      if (!fasta.startsWith('>')) throw new Error('The LegumeLoc example FASTA is invalid.');
+      setInputMode('paste');
+      setAccession('');
+      setFileName('');
+      setTextareaSeq(fasta);
+    } catch (error: unknown) {
+      setErrorModalText(getErrorMessage(error));
+    }
+  };
+
   // Upload handler supporting BOTH FASTA files and Accession List files (.txt, .csv, .tsv, .fasta)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -280,32 +288,30 @@ export default function PredictionPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-7xl space-y-8 py-6 sm:py-10">
-      <header className="grid gap-7 border-b border-[#8D99AE] pb-8 lg:grid-cols-[1fr_430px] lg:items-end">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D90429]">LegumeLoc analysis</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-[-0.035em] text-[#2B2D42] sm:text-5xl">Protein localization workspace</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#667581]">Add legume protein sequences, select a prediction depth and model, then submit the analysis.</p>
-        </div>
-        <dl className="grid grid-cols-3 overflow-hidden rounded border border-[#cfd4dc] bg-white text-center">
-          <div className="border-r border-[#cfd4dc] px-3 py-4"><dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7a8791]">Input</dt><dd className="mt-1 text-xs font-bold text-[#2B2D42]">Protein FASTA</dd></div>
-          <div className="border-r border-[#cfd4dc] px-3 py-4"><dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7a8791]">Limit</dt><dd className="mt-1 text-xs font-bold text-[#2B2D42]">10,000 records</dd></div>
-          <div className="px-3 py-4"><dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7a8791]">Retention</dt><dd className="mt-1 text-xs font-bold text-[#2B2D42]">30 days</dd></div>
+    <div className="container mx-auto max-w-6xl space-y-7 py-6 sm:py-9">
+      <header className="border-b border-[#cfc9c3] pb-6 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#a9632f]">LegumeLoc analysis</p>
+        <h1 className="mt-2 text-3xl font-bold text-[#24282c] sm:text-4xl">Submission</h1>
+        <p className="mx-auto mt-3 max-w-3xl text-sm leading-6 text-[#657078]">Enter an NCBI or UniProt accession, upload a FASTA file, or paste protein sequences to predict subcellular localization.</p>
+        <dl className="mx-auto mt-5 grid max-w-2xl grid-cols-3 overflow-hidden border border-[#d4d0cc] bg-white text-center">
+          <div className="border-r border-[#d4d0cc] px-3 py-3"><dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7a858c]">Input</dt><dd className="mt-1 text-xs font-bold text-[#24282c]">Protein FASTA</dd></div>
+          <div className="border-r border-[#d4d0cc] px-3 py-3"><dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7a858c]">Limit</dt><dd className="mt-1 text-xs font-bold text-[#24282c]">10,000 records</dd></div>
+          <div className="px-3 py-3"><dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7a858c]">Retention</dt><dd className="mt-1 text-xs font-bold text-[#24282c]">30 days</dd></div>
         </dl>
       </header>
 
       <form onSubmit={(e) => e.preventDefault()}>
-        <div className="mx-auto overflow-hidden rounded-lg border border-[#cdd7df] bg-white lg:grid lg:grid-cols-[370px_minmax(0,1fr)]">
+        <div className="mx-auto overflow-hidden rounded border border-[#cdd2d5] bg-white shadow-sm">
           {/* Left Column: Input Options (7 cols) */}
-          <section className="bg-white p-6 sm:p-8 lg:order-2 lg:border-l lg:border-[#d8e0e6] lg:p-10" aria-labelledby="input-heading">
+          <section className="bg-white p-6 sm:p-9 lg:p-10" aria-labelledby="input-heading">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#D90429]">Step 1</p>
-              <h2 id="input-heading" className="mt-1 text-2xl font-semibold text-[#2B2D42]">Choose the input method</h2>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a9632f]">Step 1</p>
+              <h2 id="input-heading" className="mt-1 text-2xl font-semibold text-[#24282c]">Choose the input method</h2>
               <p className="mt-2 text-sm leading-6 text-slate-500">LegumeLoc accepts protein sequences from one source at a time.</p>
             </div>
 
             <div className="mt-6 grid gap-5 sm:grid-cols-[240px_1fr] sm:items-end">
-              <div><span className="mb-2 block text-xs font-bold text-[#2c3943]">Sequence type</span><div className="rounded-md border border-[#c8d3dc] bg-[#fbfcfd] px-4 py-3 text-sm font-semibold text-[#2B2D42]">Protein</div></div>
+              <div><span className="mb-2 block text-xs font-bold text-[#2c3943]">Sequence type</span><div className="rounded-md border border-[#c8d3dc] bg-[#fbfcfd] px-4 py-3 text-sm font-semibold text-[#24282c]">Protein</div></div>
             <div><span className="mb-2 block text-xs font-bold text-[#2c3943]">Input method</span><div className="grid grid-cols-3 gap-1 rounded-md bg-[#eef1f3] p-1" role="tablist" aria-label="Protein input method">
               {[
                 { id: 'paste' as const, label: 'Paste FASTA', icon: ClipboardPaste },
@@ -321,7 +327,7 @@ export default function PredictionPage() {
                     role="tab"
                     aria-selected={selected}
                     onClick={() => setInputMode(tab.id)}
-                    className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-xs font-bold transition ${selected ? 'bg-white text-[#D90429] shadow-sm' : 'text-[#687681] hover:text-[#2B2D42]'}`}
+                    className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-xs font-bold transition ${selected ? 'bg-white text-[#1c7e9c] shadow-sm' : 'text-[#687681] hover:text-[#24282c]'}`}
                   >
                     <Icon className="h-4 w-4" />
                     <span>{tab.label}</span>
@@ -332,7 +338,7 @@ export default function PredictionPage() {
             </div></div>
 
             <div className="mt-8 border-t border-[#d8e0e6] pt-8">
-              <div className="mb-6 flex items-start justify-between gap-4"><div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#8D99AE]">Step 2</p><h2 className="mt-1 text-2xl font-semibold text-[#2B2D42]">Add sequence data</h2></div><button type="button" onClick={() => { setAccession(''); setTextareaSeq(''); setFileName(''); }} className="rounded-md border border-[#c8d3dc] bg-white px-4 py-2.5 text-xs font-bold text-[#405565] hover:border-[#EF233C]">Clear</button></div>
+              <div className="mb-6 flex items-start justify-between gap-4"><div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7a858c]">Step 2</p><h2 className="mt-1 text-2xl font-semibold text-[#24282c]">Add sequence data</h2></div><button type="button" onClick={() => { setAccession(''); setTextareaSeq(''); setFileName(''); }} className="rounded-md border border-[#c8d3dc] bg-white px-4 py-2.5 text-xs font-bold text-[#405565] hover:border-[#1c7e9c]">Clear</button></div>
             <div className="min-w-0">
 
             {inputMode === 'accession' && (
@@ -343,14 +349,14 @@ export default function PredictionPage() {
                     <p className="mt-1 text-xs text-slate-500">Separate multiple IDs with commas, spaces, or new lines.</p>
                   </div>
                   <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
-                    <button type="button" onClick={loadDemoAccession} className="text-[11px] font-bold text-[#D90429] hover:underline">Load 3 legume accessions</button>
+                    <button type="button" onClick={loadDemoAccession} className="text-[11px] font-bold text-[#1c7e9c] hover:underline">Load 3 legume accessions</button>
                     <div className="flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
                     {(['ncbi', 'uniprot'] as const).map((db) => (
                       <button
                         key={db}
                         type="button"
                         onClick={() => setAccType(db)}
-                        className={`rounded-md px-3 py-1.5 text-[11px] font-bold transition ${accType === db ? 'bg-[#D90429] text-white shadow-sm' : 'text-slate-500'}`}
+                        className={`rounded-md px-3 py-1.5 text-[11px] font-bold transition ${accType === db ? 'bg-[#1c7e9c] text-white shadow-sm' : 'text-slate-500'}`}
                       >
                         {db === 'ncbi' ? 'NCBI' : 'UniProt'}
                       </button>
@@ -372,7 +378,7 @@ export default function PredictionPage() {
                     type="button"
                     onClick={handleFetchAccessions}
                     disabled={fetchingAcc}
-                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-[#b9c9d5] bg-white px-4 py-2 text-xs font-bold text-[#D90429] transition hover:border-[#D90429] disabled:opacity-50"
+                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-[#b9c9d5] bg-white px-4 py-2 text-xs font-bold text-[#1c7e9c] transition hover:border-[#1c7e9c] disabled:opacity-50"
                   >
                     {fetchingAcc ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Database className="h-3.5 w-3.5" />}
                     {fetchingAcc ? 'Fetching…' : 'Fetch & preview'}
@@ -387,9 +393,9 @@ export default function PredictionPage() {
                   <p className="text-sm font-bold text-slate-800">FASTA or accession-list file</p>
                   <p className="mt-1 text-xs text-slate-500">Accepted formats: .fasta, .fa, .txt, .csv, and .tsv.</p>
                 </div>
-                <div className="relative cursor-pointer rounded-lg border-2 border-dashed border-[#C9D5D8] bg-[#FCFAF4] p-8 text-center transition hover:border-[#D90429] hover:bg-[#F1F5F5]">
+                <div className="relative cursor-pointer rounded-lg border-2 border-dashed border-[#C9D5D8] bg-[#FCFAF4] p-8 text-center transition hover:border-[#1c7e9c] hover:bg-[#F1F5F5]">
                   <input type="file" accept=".fasta,.fa,.txt,.csv,.tsv" onChange={handleFileUpload} className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
-                  <Upload className="mx-auto h-7 w-7 text-[#D90429]" />
+                  <Upload className="mx-auto h-7 w-7 text-[#1c7e9c]" />
                   <p className="mt-3 text-sm font-bold text-slate-800">Choose a file or drop it here</p>
                   <p className="mt-1 text-xs text-slate-500">{fileName || 'FASTA sequences and accession lists are supported'}</p>
                 </div>
@@ -403,7 +409,7 @@ export default function PredictionPage() {
                     <label htmlFor="legumeloc-fasta" className="text-sm font-bold text-slate-800">FASTA sequence</label>
                     <p className="mt-1 text-xs text-slate-500">Up to 10,000 sequences; each header must begin with &gt;.</p>
                   </div>
-                  <button type="button" onClick={() => setTextareaSeq(DEMO_FASTA)} className="shrink-0 text-xs font-bold text-[#D90429] hover:underline">Load demo</button>
+                  <button type="button" onClick={() => void loadDemoFasta()} className="shrink-0 text-xs font-bold text-[#1c7e9c] hover:underline">Load demo</button>
                 </div>
                 <textarea id="legumeloc-fasta" rows={12} value={textareaSeq} onChange={(e) => setTextareaSeq(e.target.value)} placeholder=">protein_id&#10;MALQVESTF..." className="form-input-legumeloc min-h-[20rem] w-full resize-y bg-white p-4 font-mono text-xs leading-6" />
               </div>
@@ -412,26 +418,26 @@ export default function PredictionPage() {
             {textareaSeq && inputMode !== 'paste' && (
               <div className="overflow-hidden rounded-lg border border-[#D9E4E7] bg-white">
                 <div className="flex items-center justify-between border-b border-[#DDE7EA] bg-[#F1F5F5] px-4 py-3">
-                  <span className="flex items-center gap-2 text-xs font-bold text-[#D90429]"><CheckCircle2 className="h-4 w-4" /> {sequenceCount} sequence{sequenceCount === 1 ? '' : 's'} ready</span>
+                  <span className="flex items-center gap-2 text-xs font-bold text-[#1c7e9c]"><CheckCircle2 className="h-4 w-4" /> {sequenceCount} sequence{sequenceCount === 1 ? '' : 's'} ready</span>
                   <button type="button" onClick={() => setTextareaSeq('')} className="text-[11px] font-bold text-slate-500 hover:text-slate-800">Clear preview</button>
                 </div>
                 <textarea rows={7} value={textareaSeq} onChange={(e) => setTextareaSeq(e.target.value)} className="w-full resize-y border-0 bg-slate-950 p-4 font-mono text-xs leading-6 text-slate-100 outline-none" aria-label="Fetched FASTA preview" />
               </div>
             )}
-              <div className="mt-5 flex flex-col gap-3 border-l-2 border-[#EF233C] bg-[#f4f7f9] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-xs leading-5 text-[#536470]"><strong className="text-[#2B2D42]">Working with a large dataset?</strong> Use the standalone LegumeLoc package for local, scripted, and repeated analyses.</p>
-                <Link href="/download" className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-[#D90429] hover:underline">View standalone tool <ExternalLink className="h-3.5 w-3.5" /></Link>
+              <div className="mt-5 flex flex-col gap-3 border-l-2 border-[#1c7e9c] bg-[#f4f7f9] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs leading-5 text-[#536470]"><strong className="text-[#24282c]">Working with a large dataset?</strong> Use the standalone LegumeLoc package for local, scripted, and repeated analyses.</p>
+                <Link href="/download" className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-[#1c7e9c] hover:underline">View standalone tool <ExternalLink className="h-3.5 w-3.5" /></Link>
               </div>
             </div>
             </div>
           </section>
 
-          <section className="border-t border-[#d8e0e6] bg-[#fbfcfd] p-6 sm:p-8 lg:order-1 lg:border-t-0 lg:p-8" aria-labelledby="options-heading">
+          <section className="border-t border-[#d8d4d0] bg-[#f4f4f3] p-6 sm:p-9 lg:p-10" aria-labelledby="options-heading">
             <div className="space-y-6">
               <div className="flex items-start justify-between border-b border-[#d1dbe2] pb-5">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#8D99AE]">Step 3</p>
-                  <h2 id="options-heading" className="mt-1 text-2xl font-semibold text-[#2B2D42]">Choose the prediction level</h2>
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7a858c]">Step 3</p>
+                  <h2 id="options-heading" className="mt-1 text-2xl font-semibold text-[#24282c]">Choose the prediction level</h2>
                 </div>
               </div>
 
@@ -439,7 +445,7 @@ export default function PredictionPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-sm text-slate-800 flex items-center gap-1.5">
-                    <Layers className="w-4 h-4 text-[#8D99AE]" />
+                    <Layers className="w-4 h-4 text-[#7a858c]" />
                     <span>Select prediction depth</span>
                   </span>
                   <button
@@ -453,14 +459,14 @@ export default function PredictionPage() {
 
                 <div className="grid gap-3">
                   <label className={`flex cursor-pointer items-center space-x-3 rounded-md border p-4 transition-all ${
-                    predictionLevel === 'level1' ? 'border-[#EF233C] bg-[#edf3f6]' : 'border-[#d1dbe2] bg-white hover:border-[#aebfcc]'
+                    predictionLevel === 'level1' ? 'border-[#1c7e9c] bg-[#edf3f6]' : 'border-[#d1dbe2] bg-white hover:border-[#aebfcc]'
                   }`}>
                     <input
                       type="radio"
                       name="predictionLevel"
                       checked={predictionLevel === 'level1'}
                       onChange={() => setPredictionLevel('level1')}
-                      className="h-4 w-4 text-[#D90429] focus:ring-[#D90429]"
+                      className="h-4 w-4 text-[#1c7e9c] focus:ring-[#1c7e9c]"
                     />
                     <div>
                       <div className="font-bold text-sm text-slate-900">Level I: Single vs Dual</div>
@@ -469,14 +475,14 @@ export default function PredictionPage() {
                   </label>
 
                   <label className={`flex cursor-pointer items-center space-x-3 rounded-md border p-4 transition-all ${
-                    predictionLevel === 'level2' ? 'border-[#EF233C] bg-[#edf3f6]' : 'border-[#d1dbe2] bg-white hover:border-[#aebfcc]'
+                    predictionLevel === 'level2' ? 'border-[#1c7e9c] bg-[#edf3f6]' : 'border-[#d1dbe2] bg-white hover:border-[#aebfcc]'
                   }`}>
                     <input
                       type="radio"
                       name="predictionLevel"
                       checked={predictionLevel === 'level2'}
                       onChange={() => setPredictionLevel('level2')}
-                      className="h-4 w-4 text-[#D90429] focus:ring-[#D90429]"
+                      className="h-4 w-4 text-[#1c7e9c] focus:ring-[#1c7e9c]"
                     />
                     <div>
                       <div className="font-bold text-sm text-slate-900">Level II: 11 single classes</div>
@@ -485,14 +491,14 @@ export default function PredictionPage() {
                   </label>
 
                   <label className={`flex cursor-pointer items-center space-x-3 rounded-md border p-4 transition-all ${
-                    predictionLevel === 'level3' ? 'border-[#EF233C] bg-[#edf3f6]' : 'border-[#d1dbe2] bg-white hover:border-[#aebfcc]'
+                    predictionLevel === 'level3' ? 'border-[#1c7e9c] bg-[#edf3f6]' : 'border-[#d1dbe2] bg-white hover:border-[#aebfcc]'
                   }`}>
                     <input
                       type="radio"
                       name="predictionLevel"
                       checked={predictionLevel === 'level3'}
                       onChange={() => setPredictionLevel('level3')}
-                      className="h-4 w-4 text-[#D90429] focus:ring-[#D90429]"
+                      className="h-4 w-4 text-[#1c7e9c] focus:ring-[#1c7e9c]"
                     />
                     <div>
                       <div className="font-bold text-sm text-slate-900">Level III: 14 dual classes</div>
@@ -533,7 +539,7 @@ export default function PredictionPage() {
                         value="fast"
                         checked={predMethod === 'fast'}
                         onChange={() => setPredMethod('fast')}
-                        className="w-3.5 h-3.5 text-[#D90429] focus:ring-[#D90429]"
+                        className="w-3.5 h-3.5 text-[#1c7e9c] focus:ring-[#1c7e9c]"
                       />
                     </div>
                     <span className="text-[11px] text-slate-600">DPCP Feature Vector. Fast speed.</span>
@@ -550,7 +556,7 @@ export default function PredictionPage() {
                         value="sensitive"
                         checked={predMethod === 'sensitive'}
                         onChange={() => setPredMethod('sensitive')}
-                        className="w-3.5 h-3.5 text-[#8D99AE] focus:ring-[#8D99AE]"
+                        className="w-3.5 h-3.5 text-[#7a858c] focus:ring-[#7a858c]"
                       />
                     </div>
                     <span className="text-[11px] text-slate-600">TPC Feature Vector. Highest accuracy.</span>
@@ -561,19 +567,19 @@ export default function PredictionPage() {
 
             {/* Action Buttons */}
             <div className="mt-8 space-y-4 border-t border-[#c3cfd8] pt-7">
-              <div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#8D99AE]">Step 4</p><h3 className="mt-1 text-xl font-semibold text-[#2B2D42]">Verify and submit</h3><p className="mt-1 text-xs leading-5 text-[#667581]">Your private results page opens automatically when processing is complete.</p></div>
+              <div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7a858c]">Step 4</p><h3 className="mt-1 text-xl font-semibold text-[#24282c]">Verify and submit</h3><p className="mt-1 text-xs leading-5 text-[#667581]">Your private results page opens automatically when processing is complete.</p></div>
               <TurnstileWidget siteKey={TURNSTILE_SITE_KEY} onToken={setTurnstileToken} resetKey={turnstileResetKey} />
               {submitting && (
-                <div className="rounded-md border border-[#C4D8DE] bg-[#EDF2F4] p-3" role="status" aria-live="polite">
-                  <div className="flex items-center gap-2 text-sm font-bold text-[#D90429]"><Loader2 className="h-4 w-4 animate-spin" /> Prediction in progress</div>
+                <div className="rounded-md border border-[#C4D8DE] bg-[#eef2f3] p-3" role="status" aria-live="polite">
+                  <div className="flex items-center gap-2 text-sm font-bold text-[#1c7e9c]"><Loader2 className="h-4 w-4 animate-spin" /> Prediction in progress</div>
                   <p className="mt-1 pl-6 text-[11px] leading-5 text-slate-600">{jobStatusText} You may keep this page open; status checks use short requests.</p>
                   {jobReceipt && (
                     <div className="mt-3 rounded-lg border border-[#D4E0E3] bg-white p-3">
-                      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.14em] text-[#D90429]"><Bookmark className="h-3.5 w-3.5" /> Save your results link</div>
-                      <p className="mt-1 font-mono text-[11px] font-bold text-[#2B2D42]">{jobReceipt.jobId}</p>
+                      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.14em] text-[#1c7e9c]"><Bookmark className="h-3.5 w-3.5" /> Save your results link</div>
+                      <p className="mt-1 font-mono text-[11px] font-bold text-[#24282c]">{jobReceipt.jobId}</p>
                       <div className="mt-2 flex gap-2">
                         <input readOnly value={jobReceipt.url} aria-label="Bookmarkable results URL" className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2 font-mono text-[10px] text-slate-600" />
-                        <button type="button" onClick={() => void navigator.clipboard.writeText(jobReceipt.url).then(() => { setLinkCopied(true); window.setTimeout(() => setLinkCopied(false), 1800); })} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#2B2D42] px-3 py-2 text-[11px] font-bold text-white">{linkCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}{linkCopied ? 'Copied' : 'Copy'}</button>
+                        <button type="button" onClick={() => void navigator.clipboard.writeText(jobReceipt.url).then(() => { setLinkCopied(true); window.setTimeout(() => setLinkCopied(false), 1800); })} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#24282c] px-3 py-2 text-[11px] font-bold text-white">{linkCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}{linkCopied ? 'Copied' : 'Copy'}</button>
                       </div>
                       <p className="mt-2 text-[10px] leading-4 text-slate-500">Keep this private link. It remains available for 30 days.</p>
                     </div>
@@ -594,7 +600,7 @@ export default function PredictionPage() {
                 type="button"
                 onClick={handleRunPrediction}
                 disabled={submitting}
-                className="inline-flex flex-1 items-center justify-center gap-2 bg-[#D90429] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#B50323] disabled:opacity-50"
+                className="inline-flex flex-1 items-center justify-center gap-2 bg-[#1c7e9c] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#14657c] disabled:opacity-50"
               >
                 {submitting ? (
                   <>
