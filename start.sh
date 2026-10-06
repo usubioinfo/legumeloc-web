@@ -201,6 +201,9 @@ check_health() {
     base_path="$(current_value NEXT_PUBLIC_BASE_PATH)"
     bind_address="${bind_address:-127.0.0.1}"
     base_path="${base_path:-/legumeloc}"
+    if [[ "${base_path}" == "/LegumeLoc" ]]; then
+        base_path="/legumeloc"
+    fi
     health_host="${bind_address}"
     [[ "${health_host}" == 0.0.0.0 || "${health_host}" == :: ]] && health_host=127.0.0.1
     health_url="http://${health_host}:3220${base_path}"

@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+const configuredBasePath = process.env.NEXT_PUBLIC_BASE_PATH || "/legumeloc";
+const publicBasePath = configuredBasePath === "/LegumeLoc" ? "/legumeloc" : configuredBasePath;
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -25,7 +28,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "/legumeloc",
+  basePath: publicBasePath,
   output: "standalone",
   poweredByHeader: false,
   images: { unoptimized: true },
